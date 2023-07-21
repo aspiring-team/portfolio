@@ -2,9 +2,10 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./icons/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     colors: {
@@ -126,7 +127,6 @@ module.exports = {
   },
   plugins: [
     require("daisyui"),
-    require("@tailwindcss/line-clamp"),
     ({ addComponents }) => {
       addComponents({
         ".h1": {
@@ -165,4 +165,7 @@ module.exports = {
       });
     },
   ],
+  daisyui: {
+    themes: ["winter", "light", "cupcake", "corporate", "pastel"],
+  },
 };
