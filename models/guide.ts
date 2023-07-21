@@ -4,7 +4,7 @@ export type Guide = {
   slug: string;
   type?: SectionType;
 
-  qna: Qna[];
+  qnas: Qna[];
   history: string[];
 };
 
