@@ -1,15 +1,18 @@
 "use client";
-import { FC, memo, useCallback } from "react";
+
+import { FC, memo } from "react";
 import { usePathname } from "next/navigation";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "@/utils";
+import { auth, logout } from "@/utils";
 
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
 
 import { Logo } from "./Logo";
+import { LogInButton } from "./button/LogInButton";
+import { SignUpButton } from "./button/SignUpButton";
+
 import { PencilLineIcon, SendIcon } from "@/icons";
 
 type NavbarProps = {
@@ -19,13 +22,6 @@ type NavbarProps = {
 const Navbar: FC<NavbarProps> = memo(({ className }) => {
   const pathname = usePathname();
   const [user, authLoading] = useAuthState(auth);
-
-  const login = useCallback(() => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).catch((e) => {
-      process.env.NODE_ENV === "development" && console.log(e);
-    });
-  }, []);
 
   return (
     <nav className={twMerge("bg-base-100 py-4", className)}>
@@ -48,7 +44,10 @@ const Navbar: FC<NavbarProps> = memo(({ className }) => {
               </button>
             )}
 
-            <div className="flex items-center space-x-2">
+            <button
+              className="flex cursor-pointer items-center space-x-2"
+              onClick={logout}
+            >
               <div className="relative aspect-square w-8 overflow-clip rounded-full bg-neutral">
                 {user.photoURL ? (
                   <Image
@@ -64,23 +63,12 @@ const Navbar: FC<NavbarProps> = memo(({ className }) => {
                 )}
               </div>
               <p className="p3 font-semibold">{user.displayName}</p>
-            </div>
+            </button>
           </div>
         ) : (
           <div className="flex items-center space-x-3">
-            <button
-              className="btn btn-primary btn-outline h-10 min-h-0 rounded-full normal-case"
-              onClick={login}
-            >
-              Log in
-            </button>
-
-            <button
-              className="btn btn-primary !h-10 min-h-0 rounded-full normal-case"
-              onClick={login}
-            >
-              Sign Up
-            </button>
+            <LogInButton />
+            <SignUpButton />
           </div>
         )}
       </div>

@@ -124,6 +124,20 @@ module.exports = {
         "hover-card":
           "hsl(206 22% 7% / 35%) 0px 10px 38px -10px,hsl(206 22% 7% / 20%) 0px 10px 20px -15px",
       },
+      keyframes: {
+        "overlay-show": {
+          from: { opacity: 0 },
+          to: { opacity: 0.5 },
+        },
+        "content-show": {
+          from: { opacity: 0, transform: "translate(-50%, -48%) scale(0.96)" },
+          to: { opacity: 0.5, transform: "translate(-50%, -50%) scale(1)" },
+        },
+      },
+      animation: {
+        "overlay-show": "overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "content-show": "content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+      },
     },
   },
   plugins: [

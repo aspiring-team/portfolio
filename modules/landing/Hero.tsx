@@ -2,6 +2,7 @@ import { FC, memo } from "react";
 
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
+import { SignUpButton } from "@/components";
 
 type HeroSectionProps = {
   className?: string;
@@ -25,9 +26,7 @@ const HeroSection: FC<HeroSectionProps> = memo(({ className }) => (
           fast-track your portfolio creation.
         </p>
 
-        <button className="btn btn-primary mt-3 h-10 min-h-0 rounded-full normal-case">
-          Sign Up for Free
-        </button>
+        <SignUpButton className="mt-3" cta />
       </div>
 
       <div className="relative grid grid-cols-2 grid-rows-2 gap-8">
