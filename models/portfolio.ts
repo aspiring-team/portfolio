@@ -4,6 +4,7 @@ export type Portfolio = {
   status: "draft" | "published" | "archived";
   title: string;
   cover: string;
+  summary: string;
   section: string | Section[];
 };
 
