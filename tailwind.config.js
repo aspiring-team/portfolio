@@ -28,7 +28,7 @@ module.exports = {
         800: "#1D2939",
         900: "#101828",
       },
-      primary: {
+      "aspiring-primary": {
         DEFAULT: "#2563EB",
         25: "#F5F8FF",
         50: "#F0F5FF",
@@ -42,7 +42,7 @@ module.exports = {
         800: "#0036AB",
         900: "#002983",
       },
-      secondary: {
+      "aspiring-secondary": {
         DEFAULT: "#7F56D9",
         25: "#FCFAFF",
         50: "#F9F5FF",
@@ -103,7 +103,7 @@ module.exports = {
       center: true,
       padding: {
         DEFAULT: "1rem",
-        md: "2rem",
+        md: "8rem",
       },
     },
     extend: {
@@ -133,10 +133,33 @@ module.exports = {
           from: { opacity: 0, transform: "translate(-50%, -48%) scale(0.96)" },
           to: { opacity: 0.5, transform: "translate(-50%, -50%) scale(1)" },
         },
+        slideDownAndFade: {
+          from: { opacity: 0, transform: "translateY(-2px)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
+        slideLeftAndFade: {
+          from: { opacity: 0, transform: "translateX(2px)" },
+          to: { opacity: 1, transform: "translateX(0)" },
+        },
+        slideUpAndFade: {
+          from: { opacity: 0, transform: "translateY(2px)" },
+          to: { opacity: 1, transform: "translateY(0)" },
+        },
+        slideRightAndFade: {
+          from: { opacity: 0, transform: "translateX(-2px)" },
+          to: { opacity: 1, transform: "translateX(0)" },
+        },
       },
       animation: {
         "overlay-show": "overlay-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
         "content-show": "content-show 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideDownAndFade:
+          "slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideLeftAndFade:
+          "slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        slideRightAndFade:
+          "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },
