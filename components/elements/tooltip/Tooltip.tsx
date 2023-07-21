@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ComponentType, PropsWithChildren } from "react";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
 import { twMerge } from "tailwind-merge";
