@@ -9,7 +9,8 @@ import { auth } from "@/utils";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
 
-import { Logo } from ".";
+import { Logo } from "./Logo";
+import { PencilLineIcon, SendIcon } from "@/icons";
 
 type NavbarProps = {
   className?: string;
@@ -37,10 +38,12 @@ const Navbar: FC<NavbarProps> = memo(({ className }) => {
           <div className="flex items-center space-x-5">
             {pathname === "/create" ? (
               <button className="btn btn-primary h-10 min-h-0 rounded-full normal-case">
+                <SendIcon className="h-4 w-4" />
                 Publish
               </button>
             ) : (
               <button className="btn btn-primary h-10 min-h-0 rounded-full normal-case">
+                <PencilLineIcon className="h-4 w-4" />
                 Add Project
               </button>
             )}
