@@ -27,7 +27,7 @@ module.exports = {
         800: "#1D2939",
         900: "#101828",
       },
-      primary: {
+      "aspiring-primary": {
         DEFAULT: "#2563EB",
         25: "#F5F8FF",
         50: "#F0F5FF",
@@ -41,7 +41,7 @@ module.exports = {
         800: "#0036AB",
         900: "#002983",
       },
-      secondary: {
+      "aspiring-secondary": {
         DEFAULT: "#7F56D9",
         25: "#FCFAFF",
         50: "#F9F5FF",
