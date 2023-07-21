@@ -1,6 +1,9 @@
+import { SectionType } from ".";
+
 export type Guide = {
-  sectionSlug: string;
-  type: string;
+  slug: string;
+  type?: SectionType;
+
   qna: Qna[];
   history: string[];
 };
