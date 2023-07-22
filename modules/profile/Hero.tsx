@@ -31,9 +31,6 @@ const HeroProfile: FC<HeroProfileProps> = memo(({ profile }) => {
             "Software Engineering for over a year and counting. Has an insatiable appetite for growth & constantly seeking new perspectives every day."}
         </p>
         <EditProfileButton profile={profile} />
-        <div className="flex items-center space-x-2">
-          <p className="p2">Select Your Theme 🎨</p>
-        </div>
       </div>
 
       <div className="relative mb-8 aspect-square w-[100%] max-w-[200px] place-self-start overflow-clip rounded-full border border-base-300 md:mb-0 md:w-1/2 md:place-self-end">

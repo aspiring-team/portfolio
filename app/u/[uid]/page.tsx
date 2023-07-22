@@ -13,20 +13,16 @@ import { auth, db } from "@/utils";
 import { PortfolioConverter, ProfileConverter } from "@/models";
 import { collection, query, where } from "firebase/firestore";
 
-const ProfilePage = () => {
-  const [user] = useAuthState(auth);
-
+const ProfilePage = ({ params: { uid } }: { params: { uid: string } }) => {
   const [profile] = useDocumentData(
-    user?.uid
-      ? doc(db, "profiles", user.uid).withConverter(ProfileConverter)
-      : null
+    uid ? doc(db, "profiles", uid).withConverter(ProfileConverter) : null
   );
 
   const [portfolios] = useCollectionData(
-    user?.uid
+    uid
       ? query(
           collection(db, "portfolios").withConverter(PortfolioConverter),
-          where("uid", "==", user.uid)
+          where("uid", "==", uid)
         )
       : null
   );
@@ -43,6 +39,7 @@ const ProfilePage = () => {
             {portfolios?.map((p) => (
               <ProjectCard
                 key={p.slug}
+                uid={p.uid}
                 slug={p.slug}
                 image={p.cover}
                 title={p.title}

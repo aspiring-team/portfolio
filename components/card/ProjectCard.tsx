@@ -7,10 +7,11 @@ type ProjectCardProps = {
   title: string;
   description: string;
   image: string;
+  uid: string;
 };
 
 const ProjectCard: FC<ProjectCardProps> = memo(
-  ({ slug, description, image, title }) => {
+  ({ slug, description, image, title, uid }) => {
     return (
       <div className="flex flex-col-reverse items-start justify-center space-x-0 space-y-4 md:flex-row md:space-x-9 md:space-y-0">
         <div className="mt-4 flex grow flex-col space-y-5 md:mt-0">
@@ -18,7 +19,7 @@ const ProjectCard: FC<ProjectCardProps> = memo(
             <h6 className="h6 font-bold">{title}</h6>
             <p className="p3">{description}</p>
           </div>
-          <Link href={`/profile/${slug}`}>
+          <Link href={`/u/${uid}/${slug}`}>
             <button className="bg-primary-50 btn  w-max rounded-lg text-aspiring-primary-700">
               Read More
             </button>

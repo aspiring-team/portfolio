@@ -81,7 +81,7 @@ const PublishButton: FC<PublishButtonProps> = memo(
         });
 
         replace(
-          `/${user.displayName?.toLocaleLowerCase().split(" ").join("-")}`
+          `/u/${user.uid}`
         );
       } catch (e) {
         process.env.NODE_ENV === "development" && console.log(e);
