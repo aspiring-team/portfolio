@@ -40,7 +40,11 @@ const HeroProfile: FC<HeroProfileProps> = memo(({ profile }) => {
         <Image
           className="object-cover"
           alt="profile pic"
-          src={user?.photoURL ?? "/favicon.svg"}
+          src={
+            params?.uid == user?.uid
+              ? user?.photoURL ?? "/favicon.svg"
+              : "/favicon.svg"
+          }
           fill
         />
       </div>
