@@ -1,13 +1,21 @@
+"use client";
+import { auth } from "@/utils";
 import Image from "next/image";
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export const SocialLinks = () => {
+  const [user] = useAuthState(auth);
   return (
     <section className="flex flex-col space-y-5 bg-aspiring-primary-25 px-4 py-16 md:px-28">
       <div className="flex flex-col space-y-2">
         <p className="p2">Like what you see?</p>
         <p className="text-xl font-bold md:text-2xl">
-          Get in touch with <span className="text-primary">Deyuna</span>. ☕️
+          Get in touch with{" "}
+          <span className="text-primary">
+            {user?.displayName?.split(" ")[0] ?? ""}
+          </span>
+          . ☕️
         </p>
       </div>
       <div className="flex items-center space-x-6">
