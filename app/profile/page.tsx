@@ -1,5 +1,8 @@
 "use client";
+
 import React from "react";
+
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 import { Navbar, ProjectCard } from "@/components";
 import { HeroProfile, SocialLinks } from "@/modules";
@@ -7,7 +10,8 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/utils";
-import { ProfileConverter } from "@/models";
+import { PortfolioConverter, ProfileConverter } from "@/models";
+import { collection, query, where } from "firebase/firestore";
 
 const ProfilePage = () => {
   const [user] = useAuthState(auth);
@@ -15,6 +19,15 @@ const ProfilePage = () => {
   const [profile] = useDocumentData(
     user?.uid
       ? doc(db, "profiles", user.uid).withConverter(ProfileConverter)
+      : null
+  );
+
+  const [portfolios] = useCollectionData(
+    user?.uid
+      ? query(
+          collection(db, "portfolios").withConverter(PortfolioConverter),
+          where("uid", "==", user.uid)
+        )
       : null
   );
 
@@ -27,12 +40,15 @@ const ProfilePage = () => {
         <div className="w-full space-y-6 border-t-2 border-gray-300 pt-24">
           <h6 className="h6 font-bold text-black">My Projects</h6>
           <div className="flex flex-col space-y-10 md:space-y-24">
-            <ProjectCard
-              id="d2o2GUU7oEySvV63cs4az"
-              image="/favicon.svg"
-              title={`Coinread Website Dashboard`}
-              description={`Coinread is a multi-feature online platform to optimize data accuracy and user experience in obtaining and tracking cryptocurrency information.`}
-            />
+            {portfolios?.map((p) => (
+              <ProjectCard
+                key={p.slug}
+                slug={p.slug}
+                image={p.cover}
+                title={p.title}
+                description={p.summary}
+              />
+            ))}
           </div>
         </div>
       </div>
