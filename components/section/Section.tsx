@@ -10,6 +10,7 @@ import { Tooltip } from "../elements";
 
 import { AlignLeftIcon, ImagePlusIcon, AddIcon, StarIcon } from "@/icons";
 import { usePortfolioStore } from "@/stores";
+import { nanoid } from "nanoid";
 
 const Editor = dynamic(
   async () => (await import("@/components/editor/Editor")).Editor,
@@ -27,7 +28,7 @@ type SectionProps = {
 
 const Section: FC<SectionProps> = memo(
   ({ id, type, title, content, image }) => {
-    const { completionLoading } = usePortfolioStore();
+    const { completionLoading, sections, setSections } = usePortfolioStore();
     const { register, handleSubmit, watch } = useForm({
       defaultValues: {
         title: title ?? "",
@@ -43,10 +44,10 @@ const Section: FC<SectionProps> = memo(
       setEditorContent(content || "<p></p>");
     }, [setEditorContent, content]);
 
-    const submitForm = (val: any) => {
+    const submitForm = handleSubmit((val: any) => {
       console.log(val);
       console.log(content);
-    };
+    });
 
     const handleSave = useCallback(() => {
       setEdit(false);
@@ -64,9 +65,22 @@ const Section: FC<SectionProps> = memo(
       };
     }, [handleSave]);
 
+    const addSection = useCallback(() => {
+      const index = sections.findIndex((s) => s.id === id);
+      setSections([
+        ...sections.slice(0, index + 1),
+        {
+          id: nanoid(),
+          title: "Section Title",
+          content: "Section Content",
+        },
+        ...sections.slice(index + 1),
+      ]);
+    }, []);
+
     return (
       <form
-        onSubmit={handleSubmit(submitForm)}
+        onSubmit={submitForm}
         className="flex flex-col-reverse items-start space-y-1 md:flex-row md:items-end md:space-x-3 md:space-y-0"
       >
         <div className="flex flex-row-reverse md:flex-col md:space-y-3">
@@ -80,10 +94,13 @@ const Section: FC<SectionProps> = memo(
           <div className="mr-20 md:mr-0">
             <Tooltip text="More" icon={AddIcon}>
               <div className="flex flex-col space-y-2">
-                <div className="flex items-center space-x-1">
+                <button
+                  className="flex items-center space-x-1"
+                  onClick={addSection}
+                >
                   <AlignLeftIcon className="h-6 w-6" />
                   <p className="p5 text-gray-700">Add Section</p>
-                </div>
+                </button>
 
                 <button
                   onClick={() => setImage(true)}
@@ -126,12 +143,15 @@ const Section: FC<SectionProps> = memo(
               </>
             ) : (
               <>
-                <p className="p1 font-bold text-gray-900">{watch("title")}</p>
+                {title && (
+                  <p className="p1 font-bold text-gray-900">{watch("title")}</p>
+                )}
+
                 {completionLoading ? (
                   <p>{editorContent}</p>
-                ) : (
+                ) : editorContent ? (
                   <Editor initialContent={editorContent} readOnly />
-                )}
+                ) : null}
               </>
             )
           ) : image ? (

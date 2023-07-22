@@ -45,10 +45,11 @@ export default function CreatePage() {
               {sections.map((section) => (
                 <Section
                   key={section.id}
+                  id={section.id ?? null}
+                  type={(section.type as SectionType) ?? null}
                   title={section.title ?? null}
                   content={section.content ?? null}
                   image={section.image ?? null}
-                  type={(section.type as SectionType) ?? null}
                 />
               ))}
             </div>
