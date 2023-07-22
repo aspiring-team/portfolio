@@ -19,9 +19,10 @@ import { PublishButton } from "./button";
 
 type NavbarProps = {
   className?: string;
+  publishDisabled?: boolean;
 };
 
-const Navbar: FC<NavbarProps> = memo(({ className }) => {
+const Navbar: FC<NavbarProps> = memo(({ className, publishDisabled }) => {
   const pathname = usePathname();
   const [user, authLoading] = useAuthState(auth);
 
@@ -35,7 +36,7 @@ const Navbar: FC<NavbarProps> = memo(({ className }) => {
         ) : user ? (
           <div className="flex items-center space-x-5">
             {pathname === "/create" ? (
-              <PublishButton />
+              <PublishButton disabled={publishDisabled} />
             ) : (
               <Link href="/create">
                 <button className="btn btn-primary h-10 min-h-0 rounded-full normal-case">

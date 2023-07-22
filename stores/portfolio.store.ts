@@ -5,6 +5,12 @@ type PortfolioStoreProps = {
   started: boolean;
   setStarted: (started: boolean) => void;
 
+  title: string;
+  setTitle: (title: string) => void;
+
+  content: string;
+  setContent: (content: string) => void;
+
   sections: Section[];
   setSections: (sections: Section[]) => void;
   appendSection: (section: Section) => void;
@@ -24,6 +30,12 @@ type PortfolioStoreProps = {
 const usePortfolioStore = create<PortfolioStoreProps>((set, get) => ({
   started: false,
   setStarted: (started) => set({ started }),
+
+  title: "",
+  setTitle: (title) => set({ title }),
+
+  content: "<p></p>",
+  setContent: (content) => set({ content }),
 
   sections: [],
   setSections: (sections) => set({ sections }),

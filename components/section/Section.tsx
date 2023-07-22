@@ -21,6 +21,9 @@ import Image from "next/image";
 import { Tooltip } from "../elements";
 
 import { AlignLeftIcon, ImagePlusIcon, AddIcon, StarIcon } from "@/icons";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/utils";
+import { twMerge } from "tailwind-merge";
 
 const Editor = dynamic(
   async () => (await import("@/components/editor/Editor")).Editor,
@@ -28,7 +31,7 @@ const Editor = dynamic(
 );
 
 type SectionProps = {
-  id?: string;
+  id: string;
   type?: SectionType | null;
 
   title?: string | null;
@@ -38,7 +41,8 @@ type SectionProps = {
 
 const Section: FC<SectionProps> = memo(
   ({ id, type, title, content, image }) => {
-    const { completionLoading, sections, setSections } = usePortfolioStore();
+    const { completionLoading, sections, setSections, updateSection } =
+      usePortfolioStore();
     const { register, handleSubmit, watch } = useForm({
       defaultValues: {
         title: title ?? "",
@@ -77,6 +81,26 @@ const Section: FC<SectionProps> = memo(
     const previewUrl = !!watch("image")[0]
       ? URL.createObjectURL(watch("image")[0])
       : undefined;
+
+    const [imageLoading, setImageLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string>();
+    const uploadImage = async () => {
+      if (!watch("image")[0]) return;
+
+      setImageLoading(true);
+      try {
+        const imageRef = ref(storage, `/images/${nanoid()}`);
+        await uploadBytes(imageRef, watch("image")[0]);
+
+        const downloadUrl = await getDownloadURL(imageRef);
+        setImageUrl(downloadUrl);
+        updateSection(id, { image: downloadUrl });
+      } catch (e) {
+        process.env.NODE_ENV === "development" && console.log(e);
+      } finally {
+        setImageLoading(false);
+      }
+    };
 
     const addImage = useCallback(() => {
       const index = sections.findIndex((s) => s.id === id);
@@ -167,8 +191,9 @@ const Section: FC<SectionProps> = memo(
               </>
             )
           ) : image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img className="max-w-full" src={image} alt="cover section" />
+            <div className="relative aspect-video w-full overflow-clip rounded-lg">
+              <Image className="object-cover" src={image} alt="" fill />
+            </div>
           ) : null}
 
           {typeof image === "string" && (
@@ -178,7 +203,7 @@ const Section: FC<SectionProps> = memo(
                 className="hidden"
                 accept="image/*"
                 type="file"
-                {...register("image")}
+                {...register("image", { onChange: () => uploadImage() })}
               />
 
               {!previewUrl ? (
@@ -186,9 +211,10 @@ const Section: FC<SectionProps> = memo(
                   htmlFor={`image-${id}`}
                   className="btn btn-primary min-h-0 w-full normal-case"
                 >
+                  {imageLoading && <span className="loading loading-spinner" />}
                   Select Image
                 </label>
-              ) : (
+              ) : !image ? (
                 <div className="relative aspect-video w-full overflow-clip rounded-lg">
                   <Image
                     className="object-cover"
@@ -197,7 +223,7 @@ const Section: FC<SectionProps> = memo(
                     fill
                   />
                 </div>
-              )}
+              ) : null}
             </div>
           )}
         </section>

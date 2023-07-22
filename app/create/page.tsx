@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import { usePortfolioStore } from "@/stores";
@@ -13,15 +13,26 @@ const Editor = dynamic(
 );
 
 export default function CreatePage() {
-  const { started, sections, guides, guideId } = usePortfolioStore();
+  const {
+    started,
+    title,
+    setTitle,
+    content,
+    setContent,
+    sections,
+    guides,
+    guideId,
+  } = usePortfolioStore();
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("<p></p>");
   const isContentEmpty = useMemo(() => content === "<p></p>", [content]);
 
   return (
     <>
-      <Navbar className="sticky top-0 z-10 shadow-lg" />
+      <Navbar
+        className="sticky top-0 z-10 shadow-lg"
+        publishDisabled={(isContentEmpty && sections.length <= 0) || !title}
+      />
+
       <main className="container relative flex min-h-[calc(100vh-73px)] flex-col">
         <div className="flex grow flex-col overflow-y-auto py-16">
           <input
@@ -45,7 +56,7 @@ export default function CreatePage() {
               {sections.map((section) => (
                 <Section
                   key={section.id}
-                  id={section.id ?? null}
+                  id={section.id}
                   type={(section.type as SectionType) ?? null}
                   title={section.title ?? null}
                   content={section.content ?? null}
