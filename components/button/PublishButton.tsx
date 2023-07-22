@@ -1,7 +1,9 @@
 "use client";
+import { CheckIcon, SendIcon } from "@/icons";
+import { urlToFile } from "@/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
-import React, { FC, memo } from "react";
+import React, { FC, memo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 type PublishButtonProps = {
@@ -10,16 +12,39 @@ type PublishButtonProps = {
 
 const PublishButton: FC<PublishButtonProps> = memo(({ className }) => {
   const coverImage = ["/cover/1.png", "/cover/2.png", "/cover/3.png"];
+
+  const [selectedPicture, setSelectedPicture] = useState("/cover/1.png");
+  const [file, setFile] = useState({} as FileList);
+
+  const indexSelectedPicture = coverImage.findIndex(
+    (pic) => pic === selectedPicture
+  );
+
+  const uploadPhoto = () => {
+    if (indexSelectedPicture != -1) {
+      urlToFile(
+        `${window.location.origin}${selectedPicture}`,
+        "file.png",
+        "image/png"
+      ).then((file: File) => {
+        // store to firestore
+      });
+    } else {
+      // store to firestore using file variable
+    }
+  };
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <button
           className={twMerge(
-            "btn btn-primary btn-outline h-10 min-h-0 rounded-full normal-case",
+            "btn btn-primary h-10 min-h-0 rounded-full normal-case",
             className
           )}
         >
-          Publish
+          <SendIcon className="h-4 w-4" />
+          <span className="hidden md:block">Publish</span>
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -35,7 +60,7 @@ const PublishButton: FC<PublishButtonProps> = memo(({ className }) => {
                     className="object-cover"
                     alt="cover picked"
                     fill
-                    src={"/cover/1.png"}
+                    src={selectedPicture}
                   />
                 </div>
                 <div className="flex w-full flex-col">
@@ -44,11 +69,20 @@ const PublishButton: FC<PublishButtonProps> = memo(({ className }) => {
                   </p>
                   <div className="flex flex-col space-y-3">
                     <div className="flex">
-                      {coverImage.map((src) => (
+                      {coverImage.map((src, index) => (
                         <div
                           key={src}
-                          className="relative mr-2 aspect-square max-h-[120px] w-[100%] overflow-clip rounded-xl border border-base-300"
+                          onClick={() => setSelectedPicture(src)}
+                          className={twMerge([
+                            "relative mr-2 aspect-square max-h-[120px] w-[100%] cursor-pointer overflow-clip rounded-xl border border-base-300",
+                            indexSelectedPicture == index && " overflow-hidden",
+                          ])}
                         >
+                          {indexSelectedPicture == index && (
+                            <div className="absolute left-9 top-9 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-aspiring-primary-50">
+                              <CheckIcon className="absolute text-aspiring-primary-700" />
+                            </div>
+                          )}
                           <Image
                             className="object-cover"
                             alt="cover projects"
@@ -58,9 +92,26 @@ const PublishButton: FC<PublishButtonProps> = memo(({ className }) => {
                         </div>
                       ))}
                     </div>
-                    <button className="btn rounded-[1000px] border border-gray-300 bg-white">
-                      Upload your own cover
-                    </button>
+
+                    <label
+                      htmlFor="cover"
+                      className="btn rounded-[1000px] border border-gray-300 bg-white"
+                    >
+                      <input
+                        onChange={(evt) => {
+                          const src = evt?.target?.files?.[0];
+                          if (src) {
+                            evt?.target?.files && setFile(evt?.target?.files);
+                            setSelectedPicture(URL.createObjectURL(src));
+                          }
+                        }}
+                        id="cover"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                      />
+                      <p>Upload your own cover</p>
+                    </label>
                   </div>
                 </div>
                 <div className="my-8 w-full border-2 border-t-gray-300"></div>
@@ -73,7 +124,10 @@ const PublishButton: FC<PublishButtonProps> = memo(({ className }) => {
                   </p>
                 </div>
                 <div className="flex w-full items-end justify-end">
-                  <button className="btn btn-primary rounded-[1000px] bg-aspiring-primary text-white">
+                  <button
+                    onClick={uploadPhoto}
+                    className="btn btn-primary rounded-[1000px] bg-aspiring-primary text-white"
+                  >
                     Publish Now
                   </button>
                 </div>

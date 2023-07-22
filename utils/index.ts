@@ -3,3 +3,4 @@ export * from "./firebase";
 export * from "./prompt";
 export * from "./section";
 export * from "./timestamp";
+export * from "./file";

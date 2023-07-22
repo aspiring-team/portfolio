@@ -15,6 +15,7 @@ import { SignUpButton } from "./button/SignUpButton";
 
 import { PencilLineIcon, SendIcon } from "@/icons";
 import Link from "next/link";
+import { PublishButton } from "./button";
 
 type NavbarProps = {
   className?: string;
@@ -34,10 +35,7 @@ const Navbar: FC<NavbarProps> = memo(({ className }) => {
         ) : user ? (
           <div className="flex items-center space-x-5">
             {pathname === "/create" ? (
-              <button className="btn btn-primary h-10 min-h-0 rounded-full normal-case">
-                <SendIcon className="h-4 w-4" />
-                <span className="hidden md:block">Publish</span>
-              </button>
+              <PublishButton />
             ) : (
               <Link href="/create">
                 <button className="btn btn-primary h-10 min-h-0 rounded-full normal-case">
