@@ -30,9 +30,6 @@ import {
   SelectionTooltipButton,
   ToggleBoldButton,
   ToggleCodeButton,
-  ToggleH1Button,
-  ToggleH2Button,
-  ToggleH3Button,
   ToggleItalicButton,
   ToggleStrikethroughButton,
   ToggleUnderlineButton,
@@ -139,7 +136,7 @@ const SelectionTooltip: FC<SelectionTooltipProps> = memo(
           top: linkRef ? linkY : selectY,
           width: linkRef ? linkWidth : selectWidth,
           height: linkRef ? linkHeight : selectHeight,
-        } as CSSProperties),
+        }) as CSSProperties,
       [
         linkRef,
         linkX,
@@ -182,11 +179,6 @@ const SelectionTooltip: FC<SelectionTooltipProps> = memo(
                 <ToggleItalicButton />
                 <ToggleUnderlineButton />
                 <ToggleStrikethroughButton />
-
-                <div className="my-1 border-l border-gray-300" />
-                <ToggleH1Button />
-                <ToggleH2Button />
-                <ToggleH3Button />
 
                 <div className="my-1 border-l border-gray-300" />
                 <SelectionTooltipButton

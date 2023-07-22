@@ -21,7 +21,7 @@ export const AiBox: FC<PropsWithChildren<AiBoxProps>> = ({
       className
     )}
   >
-    {title && onStop && (
+    {(title || onStop) && (
       <div className="flex items-center">
         {title && <p className="p4 font-bold text-gray-500">{title}</p>}
         {onStop && (

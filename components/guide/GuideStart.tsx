@@ -4,7 +4,7 @@ import { FC, memo, useCallback } from "react";
 import { nanoid } from "nanoid";
 
 import { SectionType } from "@/models";
-import { SectionTemplate } from "@/constants";
+import { SectionObjectives, SectionTemplate, SectionTitles } from "@/constants";
 import { usePortfolioStore } from "@/stores";
 
 import { twMerge } from "tailwind-merge";
@@ -17,7 +17,7 @@ type GuideStartProps = {
 };
 
 const GuideStart: FC<GuideStartProps> = memo(({ className }) => {
-  const { setStarted, setSections, appendGuide, selectGuide } =
+  const { setStarted, setSections, appendSection, appendGuide, selectGuide } =
     usePortfolioStore();
 
   const onTemplate = useCallback(() => {
@@ -26,16 +26,23 @@ const GuideStart: FC<GuideStartProps> = memo(({ className }) => {
   }, [setSections, setStarted]);
 
   const onGuide = useCallback(() => {
-    const guideId = nanoid();
+    const id = nanoid();
+    appendSection({
+      id,
+      type: SectionType.Introduction,
+      title: SectionTitles[SectionType.Introduction],
+      content: SectionObjectives[SectionType.Introduction],
+    });
+
     appendGuide({
-      id: guideId,
+      id,
       type: SectionType.Introduction,
       qnas: [],
       history: [],
     });
-    selectGuide(guideId);
+    selectGuide(id);
     setStarted(true);
-  }, [appendGuide, selectGuide, setStarted]);
+  }, [appendGuide, appendSection, selectGuide, setStarted]);
 
   return (
     <AiBox className={twMerge("p-2", className)}>

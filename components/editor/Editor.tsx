@@ -53,7 +53,7 @@ const Editor: FC<EditorProps> = memo(
     return (
       <div className={twMerge(styles.editor, className)}>
         <Remirror
-          classNames={["flex-1 overflow-y-auto"]}
+          classNames={["flex-1 overflow-y-auto focus:outline-none"]}
           manager={manager}
           initialContent={state}
           editable={!readOnly}
