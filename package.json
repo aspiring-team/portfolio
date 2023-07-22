@@ -11,6 +11,8 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.6",
+    "@remirror/pm": "^2.0.6",
+    "@remirror/react": "^2.0.34",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
@@ -25,6 +27,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
+    "react-hot-toast": "^2.4.1",
+    "remirror": "^2.0.33",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6",
     "zustand": "^4.3.9"

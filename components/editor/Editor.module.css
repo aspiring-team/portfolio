@@ -1,0 +1,94 @@
+/* Wrappers */
+.editor {
+  @apply flex select-auto;
+}
+
+.editor :global(.remirror-editor-wrapper) {
+  @apply flex flex-1 flex-col;
+}
+
+/* Editor root */
+.editor :global(.remirror-editor.ProseMirror) {
+  @apply overflow-y-auto whitespace-pre-wrap;
+}
+
+.editor *[draggable="true"] {
+  @apply cursor-pointer;
+}
+
+/* Placeholder */
+.editor :global(.remirror-is-empty:first-of-type::before) {
+  content: attr(data-placeholder);
+  @apply pointer-events-none absolute h-0 not-italic text-gray-500;
+}
+
+/* Typography styles */
+.editor p {
+  @apply p3 mb-1 select-text;
+}
+
+.editor
+  :not(:global(.remirror-is-empty)):has(
+    > :global(br.ProseMirror-trailingBreak)
+  ) {
+  @apply leading-[0.3rem];
+}
+
+.editor :not(div) > a {
+  @apply cursor-pointer text-primary underline underline-offset-2;
+}
+
+.editor h1 {
+  @apply p1 mt-3 mb-2 select-text font-semibold;
+}
+
+.editor hr + h1 {
+  @apply mt-0;
+}
+
+.editor h2 {
+  @apply p2 mt-3 mb-2 select-text font-semibold;
+}
+
+.editor hr + h2 {
+  @apply mt-0;
+}
+
+.editor h3 {
+  @apply p3 mt-3 mb-1 select-text font-semibold;
+}
+
+.editor hr + h3 {
+  @apply mt-0;
+}
+
+.editor ol {
+  @apply ml-8 select-text list-outside list-decimal;
+}
+
+.editor ul {
+  @apply ml-8 select-text list-outside list-disc;
+}
+
+.editor code {
+  line-height: normal;
+  @apply h-full select-text rounded bg-gray-100 px-1 text-sm text-error;
+}
+
+.editor strong {
+  @apply select-text font-semibold;
+}
+
+.editor em,
+.editor u {
+  @apply select-text;
+}
+
+/* Component styles */
+.editor hr {
+  @apply mt-3 border-gray-700 pb-4;
+}
+
+.editor :global(hr.ProseMirror-selectednode) {
+  @apply border-t-2;
+}
