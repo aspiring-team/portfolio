@@ -24,3 +24,4 @@ export * from "./RefreshIcon";
 export * from "./SendIcon";
 export * from "./StarIcon";
 export * from "./StopCircle";
+export * from "./LogoutIcon";

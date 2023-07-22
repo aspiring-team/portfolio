@@ -13,7 +13,7 @@ import { Logo } from "./Logo";
 import { LogInButton } from "./button/LogInButton";
 import { SignUpButton } from "./button/SignUpButton";
 
-import { PencilLineIcon, SendIcon } from "@/icons";
+import { LogoutIcon, PencilLineIcon, SendIcon } from "@/icons";
 import Link from "next/link";
 import { PublishButton } from "./button";
 
@@ -48,28 +48,32 @@ const Navbar: FC<NavbarProps> = memo(({ className, publishDisabled }) => {
               </Link>
             )}
 
-            <button
-              className="flex cursor-pointer items-center space-x-2"
-              onClick={logout}
-            >
-              <div className="relative aspect-square w-8 overflow-clip rounded-full bg-neutral">
-                {user.photoURL ? (
-                  <Image
-                    className="object-contain"
-                    alt="avatar"
-                    src={user.photoURL}
-                    fill
-                  />
-                ) : (
-                  <p className="p3 m-auto bg-neutral-content">
-                    {user.displayName?.[0]}
+            <div className="flex">
+              <Link href={`/u/${user?.uid}`}>
+                <button className="flex cursor-pointer items-center space-x-2">
+                  <div className="relative aspect-square w-8 overflow-clip rounded-full bg-neutral">
+                    {user.photoURL ? (
+                      <Image
+                        className="object-contain"
+                        alt="avatar"
+                        src={user.photoURL}
+                        fill
+                      />
+                    ) : (
+                      <p className="p3 m-auto bg-neutral-content">
+                        {user.displayName?.[0]}
+                      </p>
+                    )}
+                  </div>
+                  <p className="p3 hidden font-semibold md:block">
+                    {user.displayName}
                   </p>
-                )}
-              </div>
-              <p className="p3 hidden font-semibold md:block">
-                {user.displayName}
-              </p>
-            </button>
+                </button>
+              </Link>
+              <button className="ml-2" onClick={logout}>
+                <LogoutIcon className="text-error" />
+              </button>
+            </div>
           </div>
         ) : (
           <div className="flex items-center space-x-3">
