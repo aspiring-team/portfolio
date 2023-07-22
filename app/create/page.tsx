@@ -1,20 +1,31 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import { Footer, Help, Navbar, Section } from "@/components";
-import { SectionType } from "@/models";
+import { Section as SectionModel, SectionType } from "@/models";
+import { PORTFOLIO_DUMMY } from "@/constants";
 
 export default function CreatePage() {
+  const [portfolioData, setPortfolioData] = useState(PORTFOLIO_DUMMY);
   return (
     <main className="flex h-full flex-col">
       <Navbar className="sticky top-0 z-10 shadow-lg" />
-      <div className="container flex h-[calc(100vh-73px)] flex-col items-center space-y-16 py-10">
-        <Section
-          title="Introduction"
-          content="[This section should provide a brief summary of the project, the team, the goal, and any important context needed to understand the rest of the case study.]"
-          slug="introduction"
-          type={SectionType.Introduction}
-        />
+      <div className="container flex min-h-[calc(100vh-73px)] flex-col items-center space-y-4 py-10">
+        {portfolioData.sections.map((section: SectionModel) => (
+          <Section
+            key={section.id}
+            title={section.title}
+            content={section.content}
+            id={section.id}
+            image={section.image}
+            type={
+              section.type
+                ? SectionType[section.type as keyof typeof SectionType]
+                : null
+            }
+          />
+        ))}
+
         <Help />
       </div>
       <Footer className="mt-auto" />

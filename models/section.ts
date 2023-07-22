@@ -1,10 +1,9 @@
 export type Section = {
   id: string;
-  type?: SectionType;
-
-  title?: string;
-  content?: string;
-  image?: string;
+  type?: SectionType | string | null;
+  title?: string | null;
+  content?: string | null;
+  image?: string | null;
 };
 
 export enum SectionType {
