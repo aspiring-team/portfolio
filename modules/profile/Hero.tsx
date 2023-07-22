@@ -1,10 +1,16 @@
 "use client";
+import { EditProfileButton } from "@/components";
+import { Profile, ProfileConverter } from "@/models";
 import { auth } from "@/utils";
 import Image from "next/image";
-import React, { memo } from "react";
+import React, { FC, memo } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-const HeroProfile = memo(() => {
+type HeroProfileProps = {
+  profile: Profile | undefined;
+};
+
+const HeroProfile: FC<HeroProfileProps> = memo(({ profile }) => {
   const [user] = useAuthState(auth);
 
   return (
@@ -21,10 +27,10 @@ const HeroProfile = memo(() => {
           </p>
         </div>
         <p className="p2">
-          Software Engineering for over a year and counting. Has an insatiable
-          appetite for growth {"&"} constantly seeking new perspectives every
-          day.
+          {profile?.bio ??
+            "Software Engineering for over a year and counting. Has an insatiable appetite for growth & constantly seeking new perspectives every day."}
         </p>
+        <EditProfileButton profile={profile} />
         <div className="flex items-center space-x-2">
           <p className="p2">Select Your Theme 🎨</p>
         </div>

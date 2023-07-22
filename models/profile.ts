@@ -11,9 +11,10 @@ export type Profile = {
   email: string;
   handle: string;
   name: string;
+  bio: string;
   socials: {
     linkedin?: string;
-    twitter?: string;
+    github?: string;
   };
 };
 
@@ -29,11 +30,12 @@ export const ProfileConverter: FirestoreDataConverter<Profile> = {
     return {
       uid: snapshot.id,
       email: data.email,
+      name: data.name,
       handle: data.handle,
-      name: data.handle,
+      bio: data.bio,
       socials: {
         linkedin: data.socials.linkedin ?? "",
-        twitter: data.socials.twitter ?? "",
+        github: data.socials.github ?? "",
       },
     };
   },

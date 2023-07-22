@@ -1,10 +1,15 @@
 "use client";
+import { Profile } from "@/models";
 import { auth } from "@/utils";
 import Image from "next/image";
-import React from "react";
+import React, { FC, memo } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export const SocialLinks = () => {
+type SocialLinksProps = {
+  profile: Profile | undefined;
+};
+
+const SocialLinks: FC<SocialLinksProps> = memo(({ profile }) => {
   const [user] = useAuthState(auth);
   return (
     <section className="flex flex-col space-y-5 bg-aspiring-primary-25 px-4 py-16 md:px-28">
@@ -20,7 +25,7 @@ export const SocialLinks = () => {
       </div>
       <div className="flex items-center space-x-6">
         <a
-          href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=deyunarusmiland@gmail.com"
+          href={`https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${profile?.email}`}
           target="_blank"
           className="flex items-center space-x-2"
         >
@@ -34,7 +39,7 @@ export const SocialLinks = () => {
           <p className="p3">Email</p>
         </a>
         <a
-          href="https://www.linkedin.com/in/deyuna-arham-rusmiland"
+          href={profile?.socials?.linkedin ?? ""}
           target="_blank"
           className="flex items-center space-x-2"
         >
@@ -47,7 +52,7 @@ export const SocialLinks = () => {
           <p className="p3">Linkedin</p>
         </a>
         <a
-          href="https://github.com"
+          href={profile?.socials?.github ?? ""}
           target="_blank"
           className="flex items-center space-x-2"
         >
@@ -62,4 +67,8 @@ export const SocialLinks = () => {
       </div>
     </section>
   );
-};
+});
+
+SocialLinks.displayName = "SocialLinks";
+
+export { SocialLinks };
