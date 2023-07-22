@@ -8,3 +8,4 @@ export * from "./Navbar";
 
 export * from "./AiBox";
 export * from "./editor";
+export * from "./help";

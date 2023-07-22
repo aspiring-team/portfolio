@@ -1,7 +1,7 @@
 import { SectionType } from ".";
 
 export type Guide = {
-  slug: string;
+  id: string;
   type?: SectionType;
 
   qnas: Qna[];

@@ -1,9 +1,9 @@
 "use client";
 
-import { AlignLeftIcon, ImagePlusIcon } from "@/icons";
-import { AddIcon } from "@/icons/AddIcon";
-import { StarIcon } from "@/icons/StarIcon";
-import React, { memo } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+
+import { AlignLeftIcon, ImagePlusIcon, AddIcon, StarIcon } from "@/icons";
+import { Editor } from "../editor";
 import { Tooltip } from "../elements";
 
 type SectionProps = {
@@ -15,6 +15,33 @@ type SectionProps = {
 
 const Section: React.FC<SectionProps> = memo(
   ({ title, content, slug, type }) => {
+    const [isEdit, setIsEdit] = useState(false);
+    const [titleVal, setTitleVal] = useState(title);
+    const [contentVal, setContentVal] = useState(content);
+
+    const changeEditable = useCallback((enable: boolean) => {
+      setIsEdit(enable);
+    }, []);
+
+    const handleSave = useCallback(() => {
+      changeEditable(false);
+      // submit to the firestore
+    }, [changeEditable]);
+
+    const ref = useRef<any>(null);
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          handleSave && handleSave();
+        }
+      };
+      document.addEventListener("click", handleClickOutside, true);
+      return () => {
+        document.removeEventListener("click", handleClickOutside, true);
+      };
+    }, [handleSave]);
+
     return (
       <section className="flex flex-col-reverse items-start space-y-1 md:flex-row md:items-end md:space-x-3 md:space-y-0">
         <section className="flex flex-row-reverse md:flex-col md:space-y-3">
@@ -39,9 +66,38 @@ const Section: React.FC<SectionProps> = memo(
             </Tooltip>
           </div>
         </section>
-        <section className="flex flex-col space-y-1">
-          <p className="p1 font-bold text-gray-900">{title}</p>
-          <p className="p3 text-gray-900">{content}</p>
+        <section
+          className="flex flex-col space-y-1"
+          onClick={() => changeEditable(true)}
+          ref={ref}
+        >
+          {isEdit ? (
+            <>
+              <textarea
+                className="h6 flex-shrink-0 resize-none bg-transparent font-bold"
+                placeholder="Title"
+                rows={1}
+                value={titleVal}
+                onChange={(e) => setTitleVal(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.preventDefault();
+                  e.currentTarget.style.height = "1px";
+                  e.currentTarget.style.height =
+                    e.currentTarget.scrollHeight + "px";
+                }}
+                maxLength={80}
+              />
+              <Editor
+                initialContent={contentVal}
+                onUpdate={(h) => setContentVal(h)}
+              />
+            </>
+          ) : (
+            <>
+              <p className="p1 font-bold text-gray-900">{titleVal}</p>
+              <Editor initialContent={contentVal} readOnly />
+            </>
+          )}
         </section>
       </section>
     );

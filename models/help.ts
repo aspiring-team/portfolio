@@ -1,4 +1,4 @@
 export type Help = {
-  slug: string;
+  id: string;
   history: string[];
 };
