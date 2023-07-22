@@ -9,13 +9,10 @@ import { SectionType } from "@/models";
 
 const Editor = dynamic(
   async () => (await import("@/components/editor/Editor")).Editor,
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 export default function CreatePage() {
-  // const [portfolioData, setPortfolioData] = useState(PORTFOLIO_DUMMY);
   const { started, sections, guides, guideId } = usePortfolioStore();
 
   const [title, setTitle] = useState("");
@@ -36,7 +33,7 @@ export default function CreatePage() {
 
           {!guides.length && !sections.length && (
             <Editor
-              className="mt-4"
+              className="mt-4 pl-9"
               placeholder="Write your project story..."
               initialContent={content}
               onUpdate={(html) => setContent(html)}

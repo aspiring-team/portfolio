@@ -13,24 +13,38 @@ import {
 import { useCompletion } from "ai/react";
 import { useForm } from "react-hook-form";
 
-import { Qna } from "@/models";
+import { Qna, SectionType } from "@/models";
 import { usePortfolioStore } from "@/stores";
-import { SectionQuestions, SectionTitles } from "@/constants";
+import {
+  SectionObjectives,
+  SectionQuestions,
+  SectionTitles,
+} from "@/constants";
 import { buildSectionPrompt } from "@/utils";
 
 import { twMerge } from "tailwind-merge";
 import { AiBox } from "../AiBox";
 import { QnaItem } from "./QnaItem";
 
-import { CheckVerifiedIcon } from "@/icons";
+import { ArrowCircleRightIcon, CheckVerifiedIcon, RefreshIcon } from "@/icons";
+import { nanoid } from "nanoid";
 
 type GuideQnAProps = {
   className?: string;
 };
 
 const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
-  const { guides, guideId, updateSection, setCompletionLoading } =
-    usePortfolioStore();
+  const {
+    guides,
+    guideId,
+    appendGuide,
+    updateGuide,
+    selectGuide,
+    appendSection,
+    updateSection,
+    setCompletionLoading,
+  } = usePortfolioStore();
+
   const guide = useMemo(
     () => guides.find((g) => g.id === guideId),
     [guides, guideId]
@@ -39,6 +53,7 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
   const { reset, register, handleSubmit } = useForm({
     defaultValues: { answer: "" },
   });
+
   const title = useMemo(
     () => (guide?.type ? SectionTitles[guide.type] : undefined),
     [guide?.type]
@@ -56,20 +71,27 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
 
   useEffect(() => {
     if (!guide || !guide.type) return;
-    if (guide.qnas.length >= SectionQuestions[guide.type]!.length - 1) {
+
+    const questions = SectionQuestions[guide.type!];
+    if (guide.qnas.length >= questions!.length - 1) {
       return setQnas(guide.qnas ?? []);
     }
 
     setQnas([
       ...(guide.qnas ?? []),
-      {
-        question: SectionQuestions[guide.type]![guide.qnas.length],
-        answer: "",
-      },
+      { question: questions![guide.qnas.length], answer: "" },
     ]);
   }, [guide]);
 
   const boxRef = useRef<HTMLDivElement>(null);
+  const scroll = useCallback(() => {
+    setTimeout(() => {
+      boxRef.current?.lastElementChild?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }, 200);
+  }, []);
+
   const onAnswer = handleSubmit(({ answer }) => {
     if (!guide || !guide.type) return;
 
@@ -79,21 +101,12 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
         index === qnas.length - 1 ? { question: qna.question, answer } : qna
       ),
       ...(qnas.length < (questions?.length ?? 0)
-        ? [
-            {
-              question: questions![qnas.length],
-              answer: "",
-            },
-          ]
+        ? [{ question: questions![qnas.length], answer: "" }]
         : []),
     ]);
 
     reset();
-    setTimeout(() => {
-      boxRef.current?.lastElementChild?.scrollIntoView({
-        behavior: "smooth",
-      });
-    }, 200);
+    scroll();
   });
 
   const {
@@ -113,12 +126,43 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
     });
   }, [completion, guide, updateSection]);
 
+  const onSave = useCallback(
+    async (completion: string) => {
+      if (!guide || !guide.type) return;
+
+      updateGuide(guide?.id, { qnas, history: [...guide.history, completion] });
+      scroll();
+    },
+    [guide, qnas, scroll, updateGuide]
+  );
+
   const onGenerate = useCallback(async () => {
     if (!guide || !guide.type) return;
     setCompletionLoading(true);
-    await complete(buildSectionPrompt(guide));
+
+    const completion = await complete(buildSectionPrompt(guide));
+    if (completion) onSave(completion);
+
     setCompletionLoading(false);
-  }, [complete, guide, setCompletionLoading]);
+  }, [complete, guide, onSave, setCompletionLoading]);
+
+  const onNext = useCallback(() => {
+    const id = nanoid();
+    const type = Object.values(SectionType)[guides.length];
+    appendSection({
+      id,
+      type,
+      title: SectionTitles[type],
+      content: SectionObjectives[type],
+    });
+    appendGuide({
+      id,
+      type,
+      qnas: [],
+      history: [],
+    });
+    selectGuide(id);
+  }, [appendGuide, appendSection, guides.length, selectGuide]);
 
   return (
     <div className={twMerge("flex flex-col", className)}>
@@ -151,13 +195,36 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
               </p>
 
               <button
-                className="btn btn-ghost no-animation -mx-2 -mb-2 h-fit min-h-0 justify-start rounded p-2 normal-case"
+                className="btn btn-ghost no-animation mt-2 h-fit min-h-0 justify-start rounded p-2 normal-case"
                 disabled={completionLoading}
                 onClick={onGenerate}
               >
-                <CheckVerifiedIcon className="h-5 w-5" />
-                <p className="p3 font-normal">Generate response</p>
+                {guide?.history.length ? (
+                  <RefreshIcon className="h-5 w-5" />
+                ) : (
+                  <CheckVerifiedIcon className="h-5 w-5" />
+                )}
+
+                <p className="p3 font-normal">
+                  {guide?.history.length
+                    ? "Regenerate response"
+                    : "Generate response"}
+                </p>
               </button>
+
+              {(guide?.history.length ?? 0) > 0 &&
+                (guide?.history.length ?? 0) <
+                  Object.keys(SectionType).length && (
+                  <button
+                    className="btn btn-ghost no-animation h-fit min-h-0 justify-start rounded p-2 normal-case"
+                    onClick={onNext}
+                  >
+                    <ArrowCircleRightIcon className="h-5 w-5" />
+                    <p className="p3 font-normal">
+                      Proceed with guidance for the next section
+                    </p>
+                  </button>
+                )}
             </div>
           )}
         </div>

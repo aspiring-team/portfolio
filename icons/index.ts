@@ -2,6 +2,7 @@ export * from "./editor";
 
 export * from "./AddIcon";
 export * from "./AlignLeftIcon";
+export * from "./ArrowCircleRightIcon";
 export * from "./CheckCircle";
 export * from "./CheckIcon";
 export * from "./CheckVerifiedIcon";
@@ -19,6 +20,7 @@ export * from "./PencilLineIcon";
 export * from "./PenToolIcon";
 export * from "./PenToolMinusIcon";
 export * from "./PenToolPlusIcon";
+export * from "./RefreshIcon";
 export * from "./SendIcon";
 export * from "./StarIcon";
 export * from "./StopCircle";
