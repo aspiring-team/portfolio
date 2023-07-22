@@ -40,7 +40,7 @@ const SignUpButton: FC<SignUpButtonpProps> = memo(
               className
             )}
           >
-            Sign Up {cta && "for Free"}
+            {user ? "Add Project" : <>Sign Up {cta && "for Free"}</>}
           </button>
         </Dialog.Trigger>
 
