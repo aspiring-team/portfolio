@@ -1,16 +1,26 @@
 "use client";
 
-import { FC, memo, useCallback, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
 import dynamic from "next/dynamic";
+import { nanoid } from "nanoid";
 
 import { useForm } from "react-hook-form";
+import { usePortfolioStore } from "@/stores";
 import { SectionType } from "@/models";
 
+import Image from "next/image";
 import { Tooltip } from "../elements";
 
 import { AlignLeftIcon, ImagePlusIcon, AddIcon, StarIcon } from "@/icons";
-import { usePortfolioStore } from "@/stores";
-import { nanoid } from "nanoid";
 
 const Editor = dynamic(
   async () => (await import("@/components/editor/Editor")).Editor,
@@ -32,12 +42,9 @@ const Section: FC<SectionProps> = memo(
     const { register, handleSubmit, watch } = useForm({
       defaultValues: {
         title: title ?? "",
-        image: [] as FileList[],
+        image: {} as FileList,
       },
     });
-
-    const [isEdit, setEdit] = useState(false);
-    const [isImage, setImage] = useState(false);
 
     const [editorContent, setEditorContent] = useState(content ?? "");
     useEffect(() => {
@@ -49,21 +56,10 @@ const Section: FC<SectionProps> = memo(
       console.log(content);
     });
 
+    const [isEdit, setEdit] = useState(false);
     const handleSave = useCallback(() => {
       setEdit(false);
     }, []);
-
-    const ref = useRef<any>(null);
-    useEffect(() => {
-      const handleClickOutside = (e: MouseEvent) => {
-        if (ref.current && !ref.current.contains(e.target)) handleSave?.();
-      };
-
-      document.addEventListener("click", handleClickOutside, true);
-      return () => {
-        document.removeEventListener("click", handleClickOutside, true);
-      };
-    }, [handleSave]);
 
     const addSection = useCallback(() => {
       const index = sections.findIndex((s) => s.id === id);
@@ -76,12 +72,29 @@ const Section: FC<SectionProps> = memo(
         },
         ...sections.slice(index + 1),
       ]);
-    }, []);
+    }, [id, sections, setSections]);
+
+    const previewUrl = !!watch("image")[0]
+      ? URL.createObjectURL(watch("image")[0])
+      : undefined;
+
+    const addImage = useCallback(() => {
+      const index = sections.findIndex((s) => s.id === id);
+      setSections([
+        ...sections.slice(0, index + 1),
+        {
+          id: nanoid(),
+          image: "",
+        },
+        ...sections.slice(index + 1),
+      ]);
+    }, [id, sections, setSections]);
 
     return (
       <form
-        onSubmit={submitForm}
         className="flex flex-col-reverse items-start space-y-1 md:flex-row md:items-end md:space-x-3 md:space-y-0"
+        onSubmit={submitForm}
+        onBlur={handleSave}
       >
         <div className="flex flex-row-reverse md:flex-col md:space-y-3">
           <Tooltip text="Ask AI" icon={StarIcon}>
@@ -92,22 +105,22 @@ const Section: FC<SectionProps> = memo(
           </Tooltip>
 
           <div className="mr-20 md:mr-0">
-            <Tooltip text="More" icon={AddIcon}>
-              <div className="flex flex-col space-y-2">
+            <Tooltip className="p-1" text="More" icon={AddIcon}>
+              <div className="p5 flex flex-col font-semibold text-gray-700">
                 <button
-                  className="flex items-center space-x-1"
+                  className="btn btn-ghost flex h-fit min-h-0 items-center justify-start px-2 py-2 normal-case"
                   onClick={addSection}
                 >
-                  <AlignLeftIcon className="h-6 w-6" />
-                  <p className="p5 text-gray-700">Add Section</p>
+                  <AlignLeftIcon className="h-5 w-5" />
+                  <p>Add Section</p>
                 </button>
 
                 <button
-                  onClick={() => setImage(true)}
-                  className="flex items-center space-x-1"
+                  className="btn btn-ghost flex h-fit min-h-0 items-center justify-start px-2 py-2 normal-case"
+                  onClick={addImage}
                 >
-                  <ImagePlusIcon className="h-6 w-6" />
-                  <p className="p5 text-gray-700">Add Image</p>
+                  <ImagePlusIcon className="h-5 w-5" />
+                  <p>Add Image</p>
                 </button>
               </div>
             </Tooltip>
@@ -115,9 +128,8 @@ const Section: FC<SectionProps> = memo(
         </div>
 
         <section
-          className="flex flex-col space-y-1"
+          className="flex grow flex-col space-y-1"
           onClick={() => setEdit(true)}
-          ref={ref}
         >
           {title || content ? (
             isEdit ? (
@@ -159,22 +171,33 @@ const Section: FC<SectionProps> = memo(
             <img className="max-w-full" src={image} alt="cover section" />
           ) : null}
 
-          {isImage && (
-            <div className="flex flex-col space-y-4">
+          {typeof image === "string" && (
+            <div className="flex w-full grow flex-col">
               <input
+                id={`image-${id}`}
+                className="hidden"
                 accept="image/*"
-                id="file"
-                {...register("image")}
                 type="file"
+                {...register("image")}
               />
 
-              <button
-                className="btn btn-primary"
-                disabled={!(watch("image").length > 0)}
-                type="submit"
-              >
-                Submit
-              </button>
+              {!previewUrl ? (
+                <label
+                  htmlFor={`image-${id}`}
+                  className="btn btn-primary min-h-0 w-full normal-case"
+                >
+                  Select Image
+                </label>
+              ) : (
+                <div className="relative aspect-video w-full overflow-clip rounded-lg">
+                  <Image
+                    className="object-cover"
+                    src={previewUrl}
+                    alt=""
+                    fill
+                  />
+                </div>
+              )}
             </div>
           )}
         </section>
@@ -184,5 +207,4 @@ const Section: FC<SectionProps> = memo(
 );
 
 Section.displayName = "Section";
-
 export { Section };

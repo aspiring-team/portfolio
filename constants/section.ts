@@ -81,5 +81,5 @@ export const SectionTemplate: Section[] = (
   id: nanoid(),
   type: SectionType[type],
   title: SectionTitles[SectionType[type]],
-  content: `[${SectionObjectives[SectionType[type]]}]`,
+  content: `<i>${SectionObjectives[SectionType[type]]}</i>`,
 }));
