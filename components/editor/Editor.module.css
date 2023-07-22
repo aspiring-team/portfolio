@@ -27,19 +27,12 @@
   @apply p3 mb-1 select-text;
 }
 
-.editor
-  :not(:global(.remirror-is-empty)):has(
-    > :global(br.ProseMirror-trailingBreak)
-  ) {
-  @apply leading-[0.3rem];
-}
-
 .editor :not(div) > a {
   @apply cursor-pointer text-primary underline underline-offset-2;
 }
 
 .editor h1 {
-  @apply p1 mt-3 mb-2 select-text font-semibold;
+  @apply p1 mb-2 mt-3 select-text font-semibold;
 }
 
 .editor hr + h1 {
@@ -47,7 +40,7 @@
 }
 
 .editor h2 {
-  @apply p2 mt-3 mb-2 select-text font-semibold;
+  @apply p2 mb-2 mt-3 select-text font-semibold;
 }
 
 .editor hr + h2 {
@@ -55,7 +48,7 @@
 }
 
 .editor h3 {
-  @apply p3 mt-3 mb-1 select-text font-semibold;
+  @apply p3 mb-1 mt-3 select-text font-semibold;
 }
 
 .editor hr + h3 {
