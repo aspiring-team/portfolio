@@ -3,7 +3,13 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
 import { AlignLeftIcon, ImagePlusIcon, AddIcon, StarIcon } from "@/icons";
-import { Editor } from "../editor";
+
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(async () => (await import("../editor/Editor")).Editor, {
+  ssr: false,
+});
+
 import { Tooltip } from "../elements";
 
 type SectionProps = {
