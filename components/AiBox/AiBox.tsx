@@ -1,26 +1,38 @@
+import { FC, PropsWithChildren } from "react";
+
+import { twMerge } from "tailwind-merge";
 import { StopCircle } from "@/icons";
-import React, { PropsWithChildren } from "react";
 
 type AiBoxProps = {
+  className?: string;
   onStop?: () => void;
-  title: string;
+  title?: string;
 };
 
-export const AiBox: React.FC<PropsWithChildren<AiBoxProps>> = ({
-  onStop,
+export const AiBox: FC<PropsWithChildren<AiBoxProps>> = ({
+  className,
   title,
+  onStop,
   children,
-}) => {
-  return (
-    <section className="flex flex-col space-y-3 rounded-lg border border-gray-200 px-3.5 py-4 shadow-xs">
-      <section className="flex justify-between">
-        <p className="p4 font-bold text-gray-500">{title}</p>
-        <button className="flex items-center space-x-2" onClick={onStop}>
+}) => (
+  <section
+    className={twMerge(
+      "flex flex-col items-stretch space-y-3 rounded-lg border border-gray-200 px-3.5 py-4 shadow-xs",
+      className
+    )}
+  >
+    <div className="flex items-center">
+      {title && <p className="p4 font-bold text-gray-500">{title}</p>}
+      {onStop && (
+        <button
+          className="ml-auto flex items-center space-x-2"
+          onClick={onStop}
+        >
           <StopCircle className="text-error" />
           <p className="p4 text-error">Stop AI assistant</p>
         </button>
-      </section>
-      {children}
-    </section>
-  );
-};
+      )}
+    </div>
+    {children}
+  </section>
+);
