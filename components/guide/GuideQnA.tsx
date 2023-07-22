@@ -1,3 +1,5 @@
+"use client";
+
 import { FC, memo, useEffect, useMemo, useState } from "react";
 
 import { Qna } from "@/models";
