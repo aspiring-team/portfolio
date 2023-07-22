@@ -88,7 +88,16 @@ const PublishButton: FC<PublishButtonProps> = memo(
       } finally {
         setLoading(false);
       }
-    }, []);
+    }, [
+      authLoading,
+      file,
+      indexSelectedPicture,
+      replace,
+      sections,
+      selectedPicture,
+      title,
+      user,
+    ]);
 
     return (
       <Dialog.Root>
