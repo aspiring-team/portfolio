@@ -1,6 +1,7 @@
 export * from "./button";
 export * from "./editor";
 export * from "./elements";
+export * from "./guide";
 export * from "./help";
 export * from "./section";
 
