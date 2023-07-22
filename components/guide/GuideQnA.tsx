@@ -1,3 +1,5 @@
+"use client";
+
 import {
   FC,
   memo,
@@ -7,11 +9,14 @@ import {
   useRef,
   useState,
 } from "react";
+
+import { useCompletion } from "ai/react";
 import { useForm } from "react-hook-form";
 
 import { Qna } from "@/models";
 import { usePortfolioStore } from "@/stores";
 import { SectionQuestions, SectionTitles } from "@/constants";
+import { buildSectionPrompt } from "@/utils";
 
 import { twMerge } from "tailwind-merge";
 import { AiBox } from "../AiBox";
@@ -24,9 +29,8 @@ type GuideQnAProps = {
 };
 
 const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
-  const boxRef = useRef<HTMLDivElement>(null);
-
-  const { guides, guideId } = usePortfolioStore();
+  const { guides, guideId, updateSection, setCompletionLoading } =
+    usePortfolioStore();
   const guide = useMemo(
     () => guides.find((g) => g.id === guideId),
     [guides, guideId]
@@ -65,6 +69,7 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
     ]);
   }, [guide]);
 
+  const boxRef = useRef<HTMLDivElement>(null);
   const onAnswer = handleSubmit(({ answer }) => {
     if (!guide || !guide.type) return;
 
@@ -84,16 +89,36 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
     ]);
 
     reset();
-    setTimeout(
-      () =>
-        boxRef.current?.lastElementChild?.scrollIntoView({
-          behavior: "smooth",
-        }),
-      200
-    );
+    setTimeout(() => {
+      boxRef.current?.lastElementChild?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }, 200);
   });
 
-  const onGenerate = useCallback(() => {}, []);
+  const {
+    completion,
+    complete,
+    isLoading: completionLoading,
+  } = useCompletion({
+    api: "/api/guide/section",
+  });
+
+  useEffect(() => {
+    if (!guide || !guide.type || !completion) return;
+    updateSection(guide.id, {
+      id: guide.id,
+      title: SectionTitles[guide.type]!,
+      content: completion,
+    });
+  }, [completion, guide, updateSection]);
+
+  const onGenerate = useCallback(async () => {
+    if (!guide || !guide.type) return;
+    setCompletionLoading(true);
+    await complete(buildSectionPrompt(guide));
+    setCompletionLoading(false);
+  }, [complete, guide, setCompletionLoading]);
 
   return (
     <div className={twMerge("flex flex-col", className)}>
@@ -127,6 +152,7 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
 
               <button
                 className="btn btn-ghost no-animation -mx-2 -mb-2 h-fit min-h-0 justify-start rounded p-2 normal-case"
+                disabled={completionLoading}
                 onClick={onGenerate}
               >
                 <CheckVerifiedIcon className="h-5 w-5" />

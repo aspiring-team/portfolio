@@ -16,6 +16,9 @@ type PortfolioStoreProps = {
   selectGuide: (guideId: string) => void;
   appendGuide: (guide: Guide) => void;
   updateGuide: (id: string, guide: Guide) => void;
+
+  completionLoading: boolean;
+  setCompletionLoading: (loading: boolean) => void;
 };
 
 const usePortfolioStore = create<PortfolioStoreProps>((set, get) => ({
@@ -38,6 +41,10 @@ const usePortfolioStore = create<PortfolioStoreProps>((set, get) => ({
   appendGuide: (guide: Guide) => set((s) => ({ guides: [...s.guides, guide] })),
   updateGuide: (id: string, guide: Guide) =>
     set((s) => ({ guides: s.guides.map((g) => (g.id === id ? guide : g)) })),
+
+  completionLoading: false,
+  setCompletionLoading: (loading: boolean) =>
+    set({ completionLoading: loading }),
 }));
 
 export { usePortfolioStore };

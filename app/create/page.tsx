@@ -28,7 +28,7 @@ export default function CreatePage() {
       <main className="container relative flex min-h-[calc(100vh-73px)] flex-col">
         <div className="flex grow flex-col overflow-y-auto py-16">
           <input
-            className="h4 resize-y font-bold text-gray-900 placeholder:text-gray-500 focus:outline-none"
+            className="h4 resize-y pl-9 font-bold text-gray-900 placeholder:text-gray-500 focus:outline-none"
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.currentTarget.value)}
