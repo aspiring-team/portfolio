@@ -35,6 +35,7 @@ type GuideQnAProps = {
 
 const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
   const {
+    setStarted,
     guides,
     guideId,
     appendGuide,
@@ -169,6 +170,7 @@ const GuideQnA: FC<GuideQnAProps> = memo(({ className }) => {
       <AiBox
         className={twMerge("max-h-[16rem] overflow-auto", className)}
         title={title}
+        onStop={() => setStarted(false)}
       >
         <div className="flex flex-col" ref={boxRef}>
           <div className="flex flex-col space-y-4">
