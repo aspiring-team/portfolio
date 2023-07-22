@@ -10,7 +10,7 @@ const CheckIcon: FC<IconProps> = memo(({ className }) => (
   >
     <path
       d="M20 6L9 17L4 12"
-      stroke="currrentColor"
+      stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
