@@ -17,22 +17,24 @@ export const AiBox: FC<PropsWithChildren<AiBoxProps>> = ({
 }) => (
   <section
     className={twMerge(
-      "flex flex-col items-stretch space-y-3 rounded-lg border border-gray-200 px-3.5 py-4 shadow-xs",
+      "flex flex-col items-stretch space-y-3 rounded-lg border border-base-300 bg-base-100 px-3.5 py-4 shadow-xs",
       className
     )}
   >
-    <div className="flex items-center">
-      {title && <p className="p4 font-bold text-gray-500">{title}</p>}
-      {onStop && (
-        <button
-          className="ml-auto flex items-center space-x-2"
-          onClick={onStop}
-        >
-          <StopCircle className="text-error" />
-          <p className="p4 text-error">Stop AI assistant</p>
-        </button>
-      )}
-    </div>
+    {title && onStop && (
+      <div className="flex items-center">
+        {title && <p className="p4 font-bold text-gray-500">{title}</p>}
+        {onStop && (
+          <button
+            className="ml-auto flex items-center space-x-2"
+            onClick={onStop}
+          >
+            <StopCircle className="text-error" />
+            <p className="p4 text-error">Stop AI assistant</p>
+          </button>
+        )}
+      </div>
+    )}
     {children}
   </section>
 );
