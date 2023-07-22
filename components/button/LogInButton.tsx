@@ -2,11 +2,14 @@
 import { FC, memo, useState } from "react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, login } from "@/utils";
+import { auth, db, login } from "@/utils";
 
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { doc, setDoc } from "firebase/firestore";
+import { Profile, ProfileConverter } from "@/models";
 
 type LogInButtonProps = {
   className?: string;
@@ -15,6 +18,7 @@ type LogInButtonProps = {
 const LogInButton: FC<LogInButtonProps> = memo(({ className }) => {
   const [user, authLoading] = useAuthState(auth);
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -46,7 +50,10 @@ const LogInButton: FC<LogInButtonProps> = memo(({ className }) => {
           <button
             className="btn btn-outline mt-4 w-full normal-case"
             onClick={async () => {
-              await login();
+              const user = await login();
+              if (user) {
+                router.push(`/u/${user?.user?.uid}`);
+              }
               setOpen(false);
             }}
           >

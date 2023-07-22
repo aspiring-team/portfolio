@@ -2,12 +2,14 @@
 import { FC, memo, useState } from "react";
 
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, login } from "@/utils";
+import { auth, db, login } from "@/utils";
 
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { doc, setDoc } from "firebase/firestore";
+import { Profile, ProfileConverter } from "@/models";
 
 type SignUpButtonpProps = {
   className?: string;
@@ -56,7 +58,29 @@ const SignUpButton: FC<SignUpButtonpProps> = memo(
             <button
               className="btn btn-outline mt-4 w-full normal-case"
               onClick={async () => {
-                await login();
+                const user = await login();
+                if (user) {
+                  await setDoc(
+                    doc(db, "profiles", user?.user?.uid ?? "").withConverter(
+                      ProfileConverter
+                    ),
+                    {
+                      email: user?.user?.email ?? "",
+                      name: user?.user?.displayName ?? "",
+                      handle:
+                        user?.user?.displayName
+                          ?.toLowerCase()
+                          .split(" ")
+                          .join("-") ?? "",
+                      bio: "",
+                      socials: {
+                        linkedin: "",
+                        github: "",
+                      },
+                    } as Partial<Profile>
+                  );
+                  router.push(`/u/${user?.user?.uid}`);
+                }
                 setOpen(false);
               }}
             >

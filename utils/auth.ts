@@ -4,7 +4,8 @@ import { auth } from "./firebase";
 export const login = async () => {
   const provider = new GoogleAuthProvider();
   try {
-    await signInWithPopup(auth, provider);
+    const user = await signInWithPopup(auth, provider);
+    return user;
   } catch (e) {
     process.env.NODE_ENV === "development" && console.log(e);
   }
