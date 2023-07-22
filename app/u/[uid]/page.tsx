@@ -15,6 +15,7 @@ import { collection, query, where } from "firebase/firestore";
 import Image from "next/image";
 
 const ProfilePage = ({ params: { uid } }: { params: { uid: string } }) => {
+  const [user] = useAuthState(auth);
   const [profile, loadingProfile] = useDocumentData(
     uid ? doc(db, "profiles", uid).withConverter(ProfileConverter) : null
   );
@@ -39,7 +40,9 @@ const ProfilePage = ({ params: { uid } }: { params: { uid: string } }) => {
             <HeroProfile profile={profile} />
 
             <div className="w-full space-y-6 border-t-2 border-gray-300 pt-24">
-              <h6 className="h6 font-bold text-black">Projects</h6>
+              <h6 className="h6 font-bold text-black">
+                {uid == user?.uid ? "My Projects" : "Projects"}
+              </h6>
               <div className="flex flex-col space-y-10 md:space-y-24">
                 {portfolios && portfolios?.length > 0 ? (
                   portfolios?.map((p) => (
@@ -60,9 +63,18 @@ const ProfilePage = ({ params: { uid } }: { params: { uid: string } }) => {
                       width={200}
                       height={200}
                     />
-                    <h6 className="h6 text-black font-bold">
-                      Currently, there are no project here.
-                    </h6>
+                    <div>
+                      <h6 className="h6 font-bold text-black">
+                        {uid == user?.uid
+                          ? "Post your projects!"
+                          : "Currently, there are no project here."}
+                      </h6>
+                      {uid == user?.uid && (
+                        <p className="p2 mt-1 text-black">
+                          Highlight your projects in this dedicated space.
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
