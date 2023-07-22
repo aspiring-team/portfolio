@@ -7,6 +7,7 @@ import { auth, login } from "@/utils";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type SignUpButtonpProps = {
   className?: string;
@@ -18,11 +19,18 @@ const SignUpButton: FC<SignUpButtonpProps> = memo(
     const [user, authLoading] = useAuthState(auth);
     const [open, setOpen] = useState(false);
 
+    const router = useRouter();
+
     return (
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger
           asChild
-          onClick={(e) => (authLoading || user) && e.preventDefault()}
+          onClick={(e) => {
+            if (authLoading || user) {
+              e.preventDefault();
+              router.push("/create");
+            }
+          }}
         >
           <button
             className={twMerge(
