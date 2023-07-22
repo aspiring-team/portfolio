@@ -7,12 +7,15 @@ type PortfolioStoreProps = {
 
   sections: Section[];
   setSections: (sections: Section[]) => void;
+  appendSection: (section: Section) => void;
+  updateSection: (id: string, section: Section) => void;
 
   guides: Guide[];
   guideId?: string;
   setGuides: (guides: Guide[]) => void;
-  appendGuide: (guide: Guide) => void;
   selectGuide: (guideId: string) => void;
+  appendGuide: (guide: Guide) => void;
+  updateGuide: (id: string, guide: Guide) => void;
 };
 
 const usePortfolioStore = create<PortfolioStoreProps>((set, get) => ({
@@ -21,12 +24,20 @@ const usePortfolioStore = create<PortfolioStoreProps>((set, get) => ({
 
   sections: [],
   setSections: (sections) => set({ sections }),
+  appendSection: (section) =>
+    set((s) => ({ sections: [...s.sections, section] })),
+  updateSection: (id, section) =>
+    set((s) => ({
+      sections: s.sections.map((s) => (s.id === id ? section : s)),
+    })),
 
   guides: [],
   guideId: undefined,
   setGuides: (guides: Guide[]) => set({ guides }),
-  appendGuide: (guide: Guide) => set((s) => ({ guides: [...s.guides, guide] })),
   selectGuide: (guideId: string) => set({ guideId }),
+  appendGuide: (guide: Guide) => set((s) => ({ guides: [...s.guides, guide] })),
+  updateGuide: (id: string, guide: Guide) =>
+    set((s) => ({ guides: s.guides.map((g) => (g.id === id ? guide : g)) })),
 }));
 
 export { usePortfolioStore };
