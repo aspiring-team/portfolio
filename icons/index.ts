@@ -12,3 +12,7 @@ export * from "./EditIcon";
 export * from "./GlobeIcon";
 export * from "./LinkBrokenIcon";
 export * from "./editor";
+export * from "./DotPointsIcon";
+export * from "./CheckCircle";
+export * from "./PenToolIcon";
+export * from "./PenToolMinusIcon";
