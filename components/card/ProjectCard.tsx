@@ -18,7 +18,7 @@ const ProjectCard: FC<ProjectCardProps> = memo(
             <h6 className="h6 font-bold">{title}</h6>
             <p className="p3">{description}</p>
           </div>
-          <Link href={`/profile/projects/${id}`}>
+          <Link href={`/profile/${id}`}>
             <button className="bg-primary-50 btn  w-max rounded-lg text-aspiring-primary-700">
               Read More
             </button>
