@@ -80,9 +80,7 @@ const PublishButton: FC<PublishButtonProps> = memo(
           section: JSON.stringify(sections),
         });
 
-        replace(
-          `/u/${user.uid}`
-        );
+        replace(`/u/${user.uid}`);
       } catch (e) {
         process.env.NODE_ENV === "development" && console.log(e);
       } finally {
@@ -149,7 +147,7 @@ const PublishButton: FC<PublishButtonProps> = memo(
                             ])}
                           >
                             {indexSelectedPicture == index && (
-                              <div className="absolute left-9 top-9 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-aspiring-primary-50">
+                              <div className="absolute left-[72px] top-9 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-aspiring-primary-50">
                                 <CheckIcon className="absolute text-aspiring-primary-700" />
                               </div>
                             )}
