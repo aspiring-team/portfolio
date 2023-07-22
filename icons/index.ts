@@ -4,6 +4,7 @@ export * from "./AddIcon";
 export * from "./AlignLeftIcon";
 export * from "./CheckCircle";
 export * from "./CheckIcon";
+export * from "./CheckVerifiedIcon";
 export * from "./CloseIcon";
 export * from "./CopyIcon";
 export * from "./CopyLinkIcon";

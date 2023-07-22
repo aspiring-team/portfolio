@@ -9,12 +9,6 @@ const CloseIcon: FC<IconProps> = memo(({ className }) => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M12.0003 6.16663V17.8333M6.16699 12H17.8337"
-      stroke="#667085"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
       d="M18 6L6 18M6 6L18 18"
       stroke="currentColor"
       strokeLinecap="round"

@@ -40,11 +40,11 @@ const QnaItem: FC<QnaItemProps> = memo(
 
               {isEditing ? (
                 <div className="ml-4 space-x-2">
-                  <button className="ml-4" onClick={() => setEditing(true)}>
-                    <CheckIcon className="h-5 w-5 text-aspiring-primary" />
+                  <button className="ml-4" onClick={() => setEditing(false)}>
+                    <PencilIcon className="h-5 w-5 text-aspiring-primary" />
                   </button>
 
-                  <button className="ml-4" onClick={() => setEditing(true)}>
+                  <button className="ml-4" onClick={() => setEditing(false)}>
                     <CloseIcon className="h-5 w-5 text-aspiring-primary" />
                   </button>
                 </div>
