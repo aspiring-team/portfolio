@@ -9,10 +9,13 @@ type PortfolioStoreProps = {
   setSections: (sections: Section[]) => void;
 
   guides: Guide[];
+  guideId?: string;
   setGuides: (guides: Guide[]) => void;
+  appendGuide: (guide: Guide) => void;
+  selectGuide: (guideId: string) => void;
 };
 
-const usePortfolioStore = create<PortfolioStoreProps>((set) => ({
+const usePortfolioStore = create<PortfolioStoreProps>((set, get) => ({
   started: false,
   setStarted: (started) => set({ started }),
 
@@ -20,7 +23,10 @@ const usePortfolioStore = create<PortfolioStoreProps>((set) => ({
   setSections: (sections) => set({ sections }),
 
   guides: [],
+  guideId: undefined,
   setGuides: (guides: Guide[]) => set({ guides }),
+  appendGuide: (guide: Guide) => set((s) => ({ guides: [...s.guides, guide] })),
+  selectGuide: (guideId: string) => set({ guideId }),
 }));
 
 export { usePortfolioStore };
