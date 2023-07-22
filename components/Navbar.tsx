@@ -28,7 +28,9 @@ const Navbar: FC<NavbarProps> = memo(({ className }) => {
   return (
     <nav className={twMerge("bg-base-100 py-4", className)}>
       <div className="container flex items-center justify-between">
-        <Logo />
+        <Link href="/">
+          <Logo />
+        </Link>
 
         {authLoading ? (
           <div />
